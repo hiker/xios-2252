@@ -608,7 +608,16 @@ namespace xios
           else if (name.compare(U::GetName()) == 0)
           {
              if (attributes.end() == attributes.find("id"))
-                CGroupFactory::CreateChild(group_ptr->getShared())->parse(node);
+             {
+                StdString ref_name = name + "_ref";
+                if (attributes.end() == attributes.find(ref_name))
+                   CGroupFactory::CreateChild(group_ptr->getShared())->parse(node);
+                else
+                {
+                   StdString undef_name = CObjectFactory::GenUId<U>()+"_ref="+attributes[ref_name];
+                   CGroupFactory::CreateChild(group_ptr->getShared(), undef_name)->parse(node);
+                }
+             }
              else
                 CGroupFactory::CreateChild(group_ptr->getShared(), attributes["id"])->parse(node);
              return ;
