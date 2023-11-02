@@ -75,9 +75,6 @@ namespace xios
          if (domain->IsWritten(this->filename)) return;
          domain->checkAttributes();
 
-         if (domain->isEmpty())
-           if (SuperClass::type==MULTI_FILE) return;
-
          std::vector<StdString> dim0, dim1;
          StdString domid = domain->getDomainOutputName();
          StdString appendDomid  = (singleDomain) ? "" : "_"+domid ;
