@@ -1601,7 +1601,14 @@ namespace xios {
    void CDomain::checkBounds(void)
    TRY
    {
-     bool hasBoundValues = (0 != bounds_lonvalue.numElements()) || (0 != bounds_latvalue.numElements());
+     bool hasBoundValuesLocal = (0 != bounds_lonvalue.numElements()) || (0 != bounds_latvalue.numElements());
+     bool hasBoundValues;
+     // If any server has bounds, all processes must behave as if they have bounds, even if they have 0 actual data.
+     CContext* context = CContext::getCurrent() ;
+     CContextServer* server=context->server ;
+
+     MPI_Allreduce(&hasBoundValuesLocal,&hasBoundValues, 1, MPI_CXX_BOOL, MPI_LOR, server->intraComm);
+
      if (!nvertex.isEmpty() && nvertex > 0 && !hasBoundValues)
      {
        if (!bounds_lon_1d.isEmpty() && !bounds_lon_2d.isEmpty())
@@ -1696,8 +1703,11 @@ namespace xios {
    void CDomain::checkArea(void)
    TRY
    {
-     bool hasAreaValue = (!areavalue.isEmpty() && 0 != areavalue.numElements());
-     hasArea = !area.isEmpty();
+     bool hasAreaValueLocal = (!areavalue.isEmpty() && 0 != areavalue.numElements());
+     CContext* context = CContext::getCurrent() ;
+     CContextServer* server=context->server ;
+     bool hasAreaValue;
+     MPI_Allreduce(&hasAreaValueLocal,&hasAreaValue, 1, MPI_CXX_BOOL, MPI_LOR, server->intraComm);
      if (hasArea && !hasAreaValue)
      {
        if (area.extent(0) != ni || area.extent(1) != nj)
