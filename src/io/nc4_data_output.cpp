@@ -476,7 +476,7 @@ namespace xios
                  {
                    std::vector<StdSize> start(3);
                    std::vector<StdSize> count(3);
-                   if (domain->isEmpty())
+                   if (writtenBndsLon.isEmpty())
                    {
                      start[2] = start[1] = start[0] = 0;
                      count[2] = count[1] = count[0] = 0;
@@ -500,7 +500,7 @@ namespace xios
                    std::vector<StdSize> start(2);
                    std::vector<StdSize> count(2);
 
-                   if (domain->isEmpty())
+                   if (writtenArea.isEmpty())
                    {
                      start[0] = 0; start[1] = 0;
                      count[0] = 0; count[1] = 0;
